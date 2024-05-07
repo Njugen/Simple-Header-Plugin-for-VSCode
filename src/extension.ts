@@ -1,91 +1,103 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+
 import * as vscode from 'vscode';
+
+const contents = (webview: vscode.Webview): string => {
+	const { cspSource } = webview;
+
+	return `
+		<!DOCTYPE html>
+		<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				
+				<title>Cat Coding</title>
+			</head>
+			<body>
+				<script>
+					console.log("abc");
+					const vscode = acquireVsCodeApi();
+				
+					const handleRun = (e) => {
+						console.log("DEF");
+						
+						const textBlockField = document.getElementById("text-block-field");
+						const targetPathField = document.getElementById("target-path-field");
+						const skipItemsField = document.getElementById("skip-items-field");
+
+						console.log("textBlockField", textBlockField.value);
+						console.log("targetPathField", targetPathField.value);
+						console.log("skipItemsField", skipItemsField.value);
+
+						vscode.postMessage({
+							command: 'run',
+							data: {
+								textBlockFieldValue: textBlockField.value,
+								targetPathFieldValue: targetPathField.value,
+								skipItemsFieldValue: skipItemsField.value 
+							}
+						})
+					}
+				</script>
+
+				<label>Text block</label>
+				<textarea id="text-block-field" width="500" height="200"></textarea>
+				
+				<label>Target path:</label>
+				<input id="target-path-field" type="text" defaultValue="" />
+
+				<label>Skip items:</label>
+				<textarea id="skip-items-field" width="500" height="200"></textarea>
+
+				<button onClick="handleRun()">Run</button>
+				<button>Save</button>
+			</body>
+		</html>		
+	`;
+};
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
-	const { workspace, Uri, commands, FileSystemError } = vscode;
+export function activate(ctx: vscode.ExtensionContext) {
+	const { workspace, Uri, commands, FileSystemError, window } = vscode;
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "vscode-header-plugin" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	/*let disposable = vscode.commands.registerCommand('vscode-header-plugin.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from vscode-header-plugin!');
-	});*/
-
+	let panel: vscode.WebviewPanel | undefined;
+	// Find out whether or not this panel is in the background or not
+	const activeInColumn: vscode.ViewColumn | undefined = vscode.window.activeTextEditor && vscode.window.activeTextEditor.viewColumn;
 	const prependHeaderCMD = commands.registerCommand("vscode-header-plugin.testcmd", async () => {
-		// First, check whether or not the filesystem is editable
-		const writingPermitted: boolean | undefined = workspace.fs.isWritableFileSystem("file");
-		const initialPath: string = "D:\/gitlab\/vscode-header-plugin\/vscode-header-plugin\/src";
 
-		// Dive deeper into file tree
-		const dive = async (path: string): Promise<void> => {
-			const srcURI: vscode.Uri = Uri.file(path);
-			const items = await workspace.fs.readDirectory(srcURI);
+		// If panel exists then, then focus on it.
+		if (panel) {
+			panel.reveal(activeInColumn);
+		} else {
+			// If no such panel exists, then create it
+			const options = {
+				enableScripts: true
+			};
 
+			panel = window.createWebviewPanel("vscode-header-plugin", "VSCode Header Plugin", vscode.ViewColumn.Two, options);
+			panel.webview.html = contents(panel.webview);
+			console.log("ABC");
+			const messageHandler = (e: any): void => {
+				const { command, data } = e;
 
-			items.forEach(async (item) => {
-				// item: [string, enum], e.g. ["extension.ts", 1], which means extension.ts is a folder
-				// See: https://code.visualstudio.com/api/references/vscode-api#FileType
-
-				const itemName = item[0];
-				const typeEnum = item[1];
-
-				const filename = `${path}/${itemName}`;
-				const currentUri: vscode.Uri = Uri.file(filename);
-
-				// If this file is in the ignore list, then end this iteration.
-				if (0 === 0) { }
-
-				if (typeEnum === 1) {
-					// This is a file
-
-					// Proceed with this file if its extension matches this regex
-					const extRegex = /^.*\.(ts|js|tsx|jsx|css|scss|txt)$/;
-
-					if (itemName.match(extRegex)) {
-						const fileContents = await workspace.fs.readFile(currentUri);
-						const contentsAsString = new TextDecoder().decode(fileContents);
-
-						const headerText = "\n\n\nThis is my\nfreakin header!\n\n\n";
-						const updatedFileContents = `
-						/***
-							${headerText}
-						***/
-						${contentsAsString}
-						`;
-
-						const encodedContents = new TextEncoder().encode(updatedFileContents);
-
-						await workspace.fs.writeFile(currentUri, encodedContents);
-					}
-
-				} else if (typeEnum === 2) {
-					// This is a directory
-					// Continue the recursion
-
-					dive(filename);
+				if (command === "run") {
+					// Start appending headers
+				} else if (command === "save") {
+					// Save settings for later use
 				}
-			});
 
-
-		};
-
-		await dive(initialPath);
+			};
 
 
 
-		const command = "";
+			// Messages from webview
+			panel.webview.onDidReceiveMessage(messageHandler, undefined, ctx.subscriptions);
+		}
+
 	});
 
-	context.subscriptions.push(prependHeaderCMD);
+	ctx.subscriptions.push(prependHeaderCMD);
 }
 
 // This method is called when your extension is deactivated
