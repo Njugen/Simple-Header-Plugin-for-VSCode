@@ -41,6 +41,9 @@ export function activate(context: vscode.ExtensionContext) {
 				const filename = `${path}/${itemName}`;
 				const currentUri: vscode.Uri = Uri.file(filename);
 
+				// If this file is in the ignore list, then end this iteration.
+				if (0 === 0) { }
+
 				if (typeEnum === 1) {
 					// This is a file
 
@@ -51,14 +54,17 @@ export function activate(context: vscode.ExtensionContext) {
 						const fileContents = await workspace.fs.readFile(currentUri);
 						const contentsAsString = new TextDecoder().decode(fileContents);
 
-						const header = "This is my\nfreakin header!\n\n\n";
-						const payload = `
+						const headerText = "\n\n\nThis is my\nfreakin header!\n\n\n";
+						const updatedFileContents = `
 						/***
-							${header}${contentsAsString}
+							${headerText}
 						***/
+						${contentsAsString}
 						`;
 
-						console.log(payload);
+						const encodedContents = new TextEncoder().encode(updatedFileContents);
+
+						await workspace.fs.writeFile(currentUri, encodedContents);
 					}
 
 				} else if (typeEnum === 2) {
@@ -66,9 +72,6 @@ export function activate(context: vscode.ExtensionContext) {
 					// Continue the recursion
 
 					dive(filename);
-				} else {
-					// Everything looped through. Resolve this promise
-
 				}
 			});
 
