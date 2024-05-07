@@ -17,6 +17,10 @@
       {
         "command": "vscode-header-plugin.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "vscode-header-plugin.testcmd",
+        "title": "Run testcmd"
       }
     ]
   },
