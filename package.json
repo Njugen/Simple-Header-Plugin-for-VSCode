@@ -19,8 +19,8 @@
         "title": "Hello World"
       },
       {
-        "command": "vscode-header-plugin.testcmd",
-        "title": "Run testcmd"
+        "command": "vscode-header-plugin.add-headers-to-files",
+        "title": "Add header to files"
       }
     ]
   },
