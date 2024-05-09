@@ -1,3 +1,10 @@
+/*
+*
+* CODE BLOCK
+*
+*/
+
+
 import * as vscode from "vscode";
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
@@ -94,24 +101,28 @@ export class AddHeaderPanel {
                     const fileTypesString = fileTypesField.join("|");
                     const extRegex = new RegExp(`^.*\.(${fileTypesString})$`);
                     console.log("REGEX", extRegex);
+                    console.log("MATCH");
                     if (itemName.match(extRegex)) {
                         console.log("FILE", itemName);
                         const fileUri: vscode.Uri = Uri.file(`${rootPath}/${itemName}`);
                         const fileContents = await workspace.fs.readFile(fileUri);
+                        console.log("FILE CONTENTS", fileContents);
                         const contentsAsString = new TextDecoder().decode(fileContents);
 
+                        console.log("CONTENTS AS STRING", fileContents);
                         const updatedFileContents = `${textBlockFieldValue}\n\n\n${contentsAsString}`;
 
-                        const encodedContents = new TextEncoder().encode(updatedFileContents);
 
-                        await workspace.fs.writeFile(currentUri, encodedContents); '/'
+                        const encodedContents = new TextEncoder().encode(updatedFileContents);
+                        console.log("ENDODED", encodedContents);
+                        await workspace.fs.writeFile(fileUri, encodedContents);
                     }
 
                 } else if (typeEnum === 2) {
                     // This is a directory
                     // Continue the recursion
 
-                    dive(`${rootPath}/${itemName}`);
+                    await dive(`${rootPath}/${itemName}`);
                 }
             });
 
