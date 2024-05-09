@@ -5,7 +5,7 @@ interface IAddHeaderProps {
 	rootPathFieldValue: string,
 	textBlockFieldValue: string,
 	fileTypesField: Array<string>,
-	skipItemsFieldValue: string
+	skipItemsFieldValue: Array<string>
 }
 
 const addHeaders = (props: IAddHeaderProps): void => {
