@@ -74,6 +74,9 @@ export class AddHeaderPanel {
                 const itemName = item[0];
                 const typeEnum = item[1];
                 const rootPath = path;
+                const currentUri: vscode.Uri = Uri.file(rootPath);
+
+                console.log("ITEM", itemName, typeEnum);
 
                 if (itemName === "node_modules") {
                     return;
@@ -83,12 +86,6 @@ export class AddHeaderPanel {
                     return;
                 }
 
-
-
-
-
-
-
                 if (typeEnum === 1) {
                     // This is a file
 
@@ -96,9 +93,11 @@ export class AddHeaderPanel {
                     //const extRegex = /^.*\.(ts|js|tsx|jsx|css|scss|txt)$/;
                     const fileTypesString = fileTypesField.join("|");
                     const extRegex = new RegExp(`^.*\.(${fileTypesString})$`);
-
+                    console.log("REGEX", extRegex);
                     if (itemName.match(extRegex)) {
-                        const fileContents = await workspace.fs.readFile(currentUri);
+                        console.log("FILE", itemName);
+                        const fileUri: vscode.Uri = Uri.file(`${rootPath}/${itemName}`);
+                        const fileContents = await workspace.fs.readFile(fileUri);
                         const contentsAsString = new TextDecoder().decode(fileContents);
 
                         const updatedFileContents = `${textBlockFieldValue}\n\n\n${contentsAsString}`;
