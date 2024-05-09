@@ -73,14 +73,21 @@ export class AddHeaderPanel {
 
                 const itemName = item[0];
                 const typeEnum = item[1];
+                const rootPath = path;
+
                 if (itemName === "node_modules") {
                     return;
                 }
 
-                console.log("IIIII", item);
+                if (skipItemsList.includes(itemName)) {
+                    return;
+                }
 
-                const rootPath = path;
-                const currentUri: vscode.Uri = Uri.file(rootPath);
+
+
+
+
+
 
                 if (typeEnum === 1) {
                     // This is a file
