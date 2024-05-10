@@ -270,11 +270,13 @@ export class AddHeaderPanel {
                         </div>
                         <div class="field-container">
                             <label>Root directory</label>
+                            <p>All files found in this directory and its sub directories</p>
                             <vscode-text-field name="root-path-field" value="${vscode.workspace.rootPath || `e.g c:\\folder1/folder2/project-folder`}"></vscode-text-field>
                         </div>
 
                         <div class="field-container">
-                            <label>Skip specific directories or files</label>
+                            <label>Skip items</label>
+                            <p>Ignore certain files or folders by adding their relative path with regards to the root directory.</p>
                             <div id="field-grid">
                                 <vscode-text-field name="skip-path-field" value="" placeholder="e.g. /styling/sidebar.css"></vscode-text-field>
                                 <vscode-button name="add-skip-path-button" appearance="primary">Add</vscode-button>
