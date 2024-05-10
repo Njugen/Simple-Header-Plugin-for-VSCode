@@ -88,11 +88,12 @@ export class AddHeaderPanel {
                 console.log("ITEM NAME", itemName);
                 console.log("PATH", rootPath);
 
-                if (itemName === "node_modules") {
-                    return;
-                }
+                const ignore = [
+                    "node_modules",
+                    ".git",
+                ];
 
-                if (skipItemsList.includes(itemName)) {
+                if (skipItemsList.includes(itemName) || ignore.includes(itemName)) {
                     return;
                 }
 
