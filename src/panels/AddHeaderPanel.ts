@@ -73,7 +73,7 @@ export class AddHeaderPanel {
                 return;
             }
 
-            console.log("PATH", path);
+            //   console.log("PATH", path);
             items.forEach(async (item) => {
                 // item: [string, enum], e.g. ["extension.ts", 1], which means extension.ts is a folder
                 // See: https://code.visualstudio.com/api/references/vscode-api#FileType
@@ -83,7 +83,10 @@ export class AddHeaderPanel {
                 const rootPath = path;
                 const currentUri: vscode.Uri = Uri.file(rootPath);
 
-                console.log("ITEM", itemName, typeEnum);
+                // console.log("ITEM", itemName, typeEnum);
+
+                console.log("ITEM NAME", itemName);
+                console.log("PATH", rootPath);
 
                 if (itemName === "node_modules") {
                     return;
@@ -100,21 +103,21 @@ export class AddHeaderPanel {
                     //const extRegex = /^.*\.(ts|js|tsx|jsx|css|scss|txt)$/;
                     const fileTypesString = fileTypesField.join("|");
                     const extRegex = new RegExp(`^.*\.(${fileTypesString})$`);
-                    console.log("REGEX", extRegex);
-                    console.log("MATCH");
+                    //  console.log("REGEX", extRegex);
+                    //  console.log("MATCH");
                     if (itemName.match(extRegex)) {
-                        console.log("FILE", itemName);
+                        //    console.log("FILE", itemName);
                         const fileUri: vscode.Uri = Uri.file(`${rootPath}/${itemName}`);
                         const fileContents = await workspace.fs.readFile(fileUri);
-                        console.log("FILE CONTENTS", fileContents);
+                        //  console.log("FILE CONTENTS", fileContents);
                         const contentsAsString = new TextDecoder().decode(fileContents);
 
-                        console.log("CONTENTS AS STRING", fileContents);
+                        //console.log("CONTENTS AS STRING", fileContents);
                         const updatedFileContents = `${textBlockFieldValue}\n\n\n${contentsAsString}`;
 
 
                         const encodedContents = new TextEncoder().encode(updatedFileContents);
-                        console.log("ENDODED", encodedContents);
+                        //console.log("ENDODED", encodedContents);
                         await workspace.fs.writeFile(fileUri, encodedContents);
                     }
 
