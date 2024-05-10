@@ -172,7 +172,8 @@ export class AddHeaderPanel {
                         }
 
                         div.field-container {
-                            width: 800px;
+                            width: 60%;
+                            max-width: 800px;
                             margin: 1rem 0;
                         }
 
@@ -222,9 +223,13 @@ export class AddHeaderPanel {
                             opacity: 0.5 
                         } 
 
+                        div#selected-file-types-list {
+                            margin: 1rem 0;
+                        }
+
                         ul#skip-path-list {
                             padding: 0;
-                            margin: 0;
+                            margin: 1rem 0;
                         }
 
                         ul#skip-path-list > li {
@@ -232,7 +237,6 @@ export class AddHeaderPanel {
                             flex-direction: row;
                             justify-content: space-between;
                             padding: 0.75rem 0rem;
-                            list-style-type: disc
                         }
 
                         ul#skip-path-list > li:not(:last-child){
@@ -266,7 +270,7 @@ export class AddHeaderPanel {
                         </div>
                         <div class="field-container">
                             <label>Root directory</label>
-                            <vscode-text-field name="root-path-field" value="${vscode.workspace.rootPath}"></vscode-text-field>
+                            <vscode-text-field name="root-path-field" value="${vscode.workspace.rootPath || `e.g c:\\folder1/folder2/project-folder`}"></vscode-text-field>
                         </div>
 
                         <div class="field-container">
