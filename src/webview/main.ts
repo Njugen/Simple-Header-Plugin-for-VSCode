@@ -75,7 +75,7 @@ const main = () => {
                 return;
             }
 
-            skipPaths.push(newPath);
+            skipPaths.push(`${rootPathField.value}/${newPath}`);
 
             const newListItem = document.createElement("li");
 

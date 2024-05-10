@@ -1,3 +1,10 @@
+asdasd
+
+
+
+
+
+
 /*
 *
 * CODE BLOCK
@@ -87,13 +94,13 @@ export class AddHeaderPanel {
 
                 //   console.log("ITEM NAME", itemName);
                 //   console.log("PATH", rootPath);
-                console.log("SKIP", skipItemsList, itemName);
+                console.log("SKIP", skipItemsList, String.raw`${path}/${itemName}`);
                 const ignore = [
                     "node_modules",
                     ".git",
                 ];
 
-                if (skipItemsList.includes(itemName) || ignore.includes(itemName)) {
+                if (skipItemsList.includes(String.raw`${path}/${itemName}`) || ignore.includes(itemName)) {
                     return;
                 }
 
