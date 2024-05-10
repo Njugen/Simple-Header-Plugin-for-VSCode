@@ -85,9 +85,9 @@ export class AddHeaderPanel {
 
                 // console.log("ITEM", itemName, typeEnum);
 
-                console.log("ITEM NAME", itemName);
-                console.log("PATH", rootPath);
-
+                //   console.log("ITEM NAME", itemName);
+                //   console.log("PATH", rootPath);
+                console.log("SKIP", skipItemsList, itemName);
                 const ignore = [
                     "node_modules",
                     ".git",
