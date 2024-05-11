@@ -1,7 +1,4 @@
 
-
-
-
 import * as vscode from 'vscode';
 
 import { AddHeaderPanel } from './panels/AddHeaderPanel';
@@ -19,7 +16,7 @@ export function activate(ctx: vscode.ExtensionContext) {
 
 		// If panel exists then, then focus on it.
 
-		AddHeaderPanel.render(ctx.extensionUri);
+		AddHeaderPanel.render(ctx);
 	});
 
 	ctx.subscriptions.push(addHeadersCMD);

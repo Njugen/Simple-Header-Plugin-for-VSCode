@@ -1,6 +1,4 @@
 
-
-
 /*
 *
 * CODE BLOCK
@@ -24,34 +22,39 @@ export class AddHeaderPanel {
         fileTypesField: ["test"]
     }
 
-    private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
+    private constructor(panel: vscode.WebviewPanel, ctx: vscode.ExtensionContext) {
         this._panel = panel;
 
-        this._panel.webview.html = this._getWebviewContent(this._panel.webview, extensionUri);
+        this._panel.webview.html = this._getWebviewContent(this._panel.webview, ctx.extensionUri);
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
-        this._setWebviewMessageListener(this._panel.webview);
+        this._setWebviewMessageListener(ctx, this._panel.webview);
 
-        // Make a preset of tags
+        const storedFormData: any = ctx.workspaceState.get("form-data");
+        if (storedFormData) {
+            this._presetFormData = storedFormData;
+        }
+        console.log("STORED", storedFormData);
+        // Make a preset
         panel.webview.postMessage({
             command: "preset",
-            data: this._presetFormData
+            data: storedFormData || this._presetFormData
         });
 
-        this._addHeader(this._presetFormData);
+        //this._addHeader(this._presetFormData);
     }
 
-    public static render(extensionUri: vscode.Uri) {
+    public static render(ctx: vscode.ExtensionContext) {
         if (AddHeaderPanel.currentPanel) {
             AddHeaderPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
         } else {
             const options = {
                 enableScripts: true,
-                localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'out')]
+                localResourceRoots: [vscode.Uri.joinPath(ctx.extensionUri, 'out')]
             };
             const panel = vscode.window.createWebviewPanel("vscode-header-plugin", "VSCode Header Plugin", vscode.ViewColumn.One, options);
 
-            AddHeaderPanel.currentPanel = new AddHeaderPanel(panel, extensionUri);
+            AddHeaderPanel.currentPanel = new AddHeaderPanel(panel, ctx);
         }
     }
 
@@ -153,13 +156,26 @@ export class AddHeaderPanel {
     };
 
 
-    private _setWebviewMessageListener(webview: vscode.Webview) {
+    private _setWebviewMessageListener(ctx: vscode.ExtensionContext, webview: vscode.Webview) {
         webview.onDidReceiveMessage(
             (message: any) => {
+                console.log("RECEIVED", message);
                 const { data, command } = message;
 
                 if (command === "run") {
                     this._addHeader(data);
+                } else if (command === "save") {
+                    const prevData: any = ctx.workspaceState.get("form-data");
+                    console.log("PREV", prevData);
+                    const newData: IFormData = {
+                        textBlockFieldValue: data.textBlockFieldValue || prevData.textBlockFieldValue || "",
+                        rootPathFieldValue: data.rootPathFieldValue || prevData.rootPathFieldValue || "",
+                        skipItemsList: data.skipItemsList || prevData.skipItemsList || [],
+                        fileTypesField: data.fileTypesField || prevData.fileTypesField || []
+                    };
+
+                    ctx.workspaceState.update("form-data", newData);
+                    this._presetFormData = newData;
                 }
             },
             undefined,
@@ -275,7 +291,7 @@ export class AddHeaderPanel {
                         <h1>Add file header</h1>
                         <div class="field-container">
                             <label>Text block</label>
-                            <vscode-text-area name="text-block-field" rows="15"></vscode-text-area>
+                            <vscode-text-area name="text-block-field" rows="15" value="${this._presetFormData.textBlockFieldValue}"></vscode-text-area>
                         </div>
                         <div class="field-container">
                             <label>File types</label>
@@ -300,6 +316,13 @@ export class AddHeaderPanel {
                             </div>
                             <ul id="skip-path-list"></ul>
                         </div>
+
+                        <em>
+                            Warning: Make sure to backup and/or commit your project - and verify that all the fields are
+                            filled accordingly to your needs - before hitting "Run". Running this carelessly may result in files
+                            getting messed up.
+                        </em>
+
                         <vscode-button name="run-button" appearance="primary">Run</vscode-button>
                     </section>
 
@@ -307,10 +330,13 @@ export class AddHeaderPanel {
                     <script>
                         window.addEventListener("message", (e) => {
                             console.log("MY:", e);
-
-                            const { fileTypesField } = e.data;
+                            if(e.data.fileTypesField){
+                                return;
+                            }
+                            const { fileTypesField } = e.data.data;
                             const fileTypesList = document.getElementById("selected-file-types-list");
                             
+                            console.log("FILETYPESFIELD", fileTypesField);
                             fileTypesField.forEach((type) => {
                                 const newListItem = document.createElement("vscode-tag");
 
@@ -321,17 +347,15 @@ export class AddHeaderPanel {
                                 removeButton.innerHTML = "x";
                                 removeButton.addEventListener("click", (e) => {
                                     e.stopPropagation();
-                                    selectedFileTypes = selectedFileTypes.filter((target: string) => target !== newType);
+                                    selectedFileTypes = selectedFileTypes.filter((target) => target !== newType);
                                     const tags = Array.from(fileTypesList.getElementsByTagName("vscode-tag"));
                                     const updatedListDOM = tags.forEach((target, i) => {
-                                        //console.log("AAAA", target.innerHTML.includes(newType));
                                         if (target.innerHTML.includes(newType) === true) {
                                             fileTypesList.removeChild(target);
                                         }
                                     });
                                     console.log(updatedListDOM);
                                     console.log(newType);
-                                    //fileTypesList.childNodes = updatedListDOM;
                                 });
 
                                 newListItem.appendChild(listItemText).appendChild(removeButton);

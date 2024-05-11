@@ -1,6 +1,4 @@
 
-
-
 import { provideVSCodeDesignSystem, vsCodeButton, allComponents } from "@vscode/webview-ui-toolkit";
 provideVSCodeDesignSystem().register(allComponents);
 
@@ -23,6 +21,21 @@ const main = () => {
 
     const addSkipPathButton = document.querySelector('[name="add-skip-path-button"]') as HTMLButtonElement;
     let skipPaths: Array<string> = [];
+
+    const submitData = (cmd: string) => {
+        console.log("ROOOT", rootPathField.value);
+        const payload: IFormData = {
+            textBlockFieldValue: textBlockField.value,
+            rootPathFieldValue: rootPathField.value,
+            skipItemsList: skipPaths,
+            fileTypesField: selectedFileTypes
+        };
+
+        vscode.postMessage({
+            command: cmd,
+            data: payload
+        });
+    };
 
     const addFileType = (e: any, presetFileTypes: Array<string> = []): void => {
         const fileTypesList = document.getElementById("selected-file-types-list") as HTMLDivElement;
@@ -58,11 +71,15 @@ const main = () => {
                     console.log(updatedListDOM);
                     console.log(newType);
                     //fileTypesList.childNodes = updatedListDOM;
+
+                    submitData("save");
                 });
 
                 newListItem.appendChild(listItemText).appendChild(removeButton);
 
                 fileTypesList.appendChild(newListItem);
+
+                submitData("save");
             }
         }
 
@@ -78,8 +95,6 @@ const main = () => {
 
 
     };
-
-    addFileType(null, ["ts"]);
 
     const addPath = (): void => {
         const skipPathList = document.getElementById("skip-path-list") as HTMLDivElement;
@@ -113,6 +128,7 @@ const main = () => {
                 });
                 console.log(updatedListDOM);
                 console.log(newPath);
+                submitData("save");
                 //skipPathList.childNodes = updatedListDOM;
             });
 
@@ -124,24 +140,12 @@ const main = () => {
             pathField.value = "";
         }
 
+        submitData("save");
     }
 
-    const submitData = () => {
-        console.log("ROOOT", rootPathField.value);
-        const payload: IFormData = {
-            textBlockFieldValue: textBlockField.value,
-            rootPathFieldValue: rootPathField.value,
-            skipItemsList: skipPaths,
-            fileTypesField: selectedFileTypes
-        };
-
-        vscode.postMessage({
-            command: "run",
-            data: payload
-        });
-    };
-
-    runButton.addEventListener("click", submitData);
+    textBlockField.addEventListener("change", (e: any) => submitData("save"));
+    rootPathField.addEventListener("change", (e: any) => submitData("save"));
+    runButton.addEventListener("click", (e: any) => submitData("run"));
     addTypeButton.addEventListener("click", addFileType);
     addSkipPathButton.addEventListener("click", addPath);
 };
