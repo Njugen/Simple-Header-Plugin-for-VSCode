@@ -14,6 +14,12 @@ export class AddHeaderPanel {
     public static currentPanel: AddHeaderPanel | undefined;
     private readonly _panel: vscode.WebviewPanel;
     private _disposables: vscode.Disposable[] = [];
+    private _presetFormData: IFormData = {
+        textBlockFieldValue: "",
+        rootPathFieldValue: "",
+        skipItemsList: [],
+        fileTypesField: []
+    }
 
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
         this._panel = panel;
@@ -22,6 +28,14 @@ export class AddHeaderPanel {
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
         this._setWebviewMessageListener(this._panel.webview);
+
+        // Make a preset of tags
+        panel.webview.postMessage({
+            command: "LLLLL",
+            data: { constant: "whatthe" }
+        });
+
+        this._addHeader(this._presetFormData);
     }
 
     public static render(extensionUri: vscode.Uri) {
@@ -287,6 +301,11 @@ export class AddHeaderPanel {
                     </section>
 
                     <script type="module" src="${webviewUri}"></script>
+                    <script>
+                        window.addEventListener("message", (e) => {
+                            console.log("MY:", e);
+                        })
+                    </script>
                 </body>
             </html>
         `;
