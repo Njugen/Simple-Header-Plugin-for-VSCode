@@ -1,3 +1,6 @@
+
+
+
 /*
 *
 * CODE BLOCK
@@ -18,7 +21,7 @@ export class AddHeaderPanel {
         textBlockFieldValue: "",
         rootPathFieldValue: "",
         skipItemsList: [],
-        fileTypesField: []
+        fileTypesField: ["test"]
     }
 
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
@@ -31,8 +34,8 @@ export class AddHeaderPanel {
 
         // Make a preset of tags
         panel.webview.postMessage({
-            command: "LLLLL",
-            data: { constant: "whatthe" }
+            command: "preset",
+            data: this._presetFormData
         });
 
         this._addHeader(this._presetFormData);
@@ -304,6 +307,38 @@ export class AddHeaderPanel {
                     <script>
                         window.addEventListener("message", (e) => {
                             console.log("MY:", e);
+
+                            const { fileTypesField } = e.data;
+                            const fileTypesList = document.getElementById("selected-file-types-list");
+                            
+                            fileTypesField.forEach((type) => {
+                                const newListItem = document.createElement("vscode-tag");
+
+                                const listItemText = document.createElement("span");
+                                listItemText.innerHTML = type;
+
+                                const removeButton = document.createElement("button");
+                                removeButton.innerHTML = "x";
+                                removeButton.addEventListener("click", (e) => {
+                                    e.stopPropagation();
+                                    selectedFileTypes = selectedFileTypes.filter((target: string) => target !== newType);
+                                    const tags = Array.from(fileTypesList.getElementsByTagName("vscode-tag"));
+                                    const updatedListDOM = tags.forEach((target, i) => {
+                                        //console.log("AAAA", target.innerHTML.includes(newType));
+                                        if (target.innerHTML.includes(newType) === true) {
+                                            fileTypesList.removeChild(target);
+                                        }
+                                    });
+                                    console.log(updatedListDOM);
+                                    console.log(newType);
+                                    //fileTypesList.childNodes = updatedListDOM;
+                                });
+
+                                newListItem.appendChild(listItemText).appendChild(removeButton);
+
+                                fileTypesList.appendChild(newListItem);
+                            })
+                            
                         })
                     </script>
                 </body>
