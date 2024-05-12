@@ -1,5 +1,6 @@
 
 import { provideVSCodeDesignSystem, vsCodeButton, allComponents } from "@vscode/webview-ui-toolkit";
+
 provideVSCodeDesignSystem().register(allComponents);
 
 interface IFormData {
@@ -23,7 +24,6 @@ const main = () => {
     let skipPaths: Array<string> = [];
 
     const submitData = (cmd: string) => {
-        console.log("ROOOT", rootPathField.value);
         const payload: IFormData = {
             textBlockFieldValue: textBlockField.value,
             rootPathFieldValue: rootPathField.value,
@@ -31,10 +31,12 @@ const main = () => {
             fileTypesField: selectedFileTypes
         };
 
+
         vscode.postMessage({
             command: cmd,
             data: payload
         });
+
     };
 
     const addFileType = (e: any, presetFileTypes: Array<string> = []): void => {
@@ -63,14 +65,10 @@ const main = () => {
                     selectedFileTypes = selectedFileTypes.filter((target: string) => target !== newType);
                     const tags = Array.from(fileTypesList.getElementsByTagName("vscode-tag"));
                     const updatedListDOM = tags.forEach((target, i) => {
-                        //console.log("AAAA", target.innerHTML.includes(newType));
                         if (target.innerHTML.includes(newType) === true) {
                             fileTypesList.removeChild(target);
                         }
                     });
-                    console.log(updatedListDOM);
-                    console.log(newType);
-                    //fileTypesList.childNodes = updatedListDOM;
 
                     submitData("save");
                 });
@@ -121,13 +119,11 @@ const main = () => {
                 skipPaths = skipPaths.filter((target: string) => target !== newPath);
                 const tags = Array.from(skipPathList.getElementsByTagName("li"));
                 const updatedListDOM = tags.forEach((target, i) => {
-                    //console.log("AAAA", target.innerHTML.includes(newPath));
                     if (target.innerHTML.includes(newPath) === true) {
                         skipPathList.removeChild(target);
                     }
                 });
-                console.log(updatedListDOM);
-                console.log(newPath);
+
                 submitData("save");
                 //skipPathList.childNodes = updatedListDOM;
             });
@@ -148,6 +144,23 @@ const main = () => {
     runButton.addEventListener("click", (e: any) => submitData("run"));
     addTypeButton.addEventListener("click", addFileType);
     addSkipPathButton.addEventListener("click", addPath);
+
+    window.addEventListener("message", (e) => {
+
+        if (e.data.command === "delete") {
+            selectedFileTypes = selectedFileTypes.filter((a, b) => a !== e.data.data.delete);
+
+            submitData("save");
+            return;
+        } else {
+            console.log("LLLLLLLLLL", e);
+            selectedFileTypes = e.data.data.fileTypesField;
+            textBlockField.value = e.data.data.textBlockFieldValue;
+            rootPathField.value = e.data.data.rootPathFieldValue;
+            skipPaths = e.data.data.skipItemsList;
+        }
+
+    });
 };
 
 window.addEventListener("load", main);

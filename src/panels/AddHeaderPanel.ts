@@ -19,7 +19,7 @@ export class AddHeaderPanel {
         textBlockFieldValue: "",
         rootPathFieldValue: "",
         skipItemsList: [],
-        fileTypesField: ["test"]
+        fileTypesField: []
     }
 
     private constructor(panel: vscode.WebviewPanel, ctx: vscode.ExtensionContext) {
@@ -34,7 +34,7 @@ export class AddHeaderPanel {
         if (storedFormData) {
             this._presetFormData = storedFormData;
         }
-        console.log("STORED", storedFormData);
+
         // Make a preset
         panel.webview.postMessage({
             command: "preset",
@@ -159,19 +159,20 @@ export class AddHeaderPanel {
     private _setWebviewMessageListener(ctx: vscode.ExtensionContext, webview: vscode.Webview) {
         webview.onDidReceiveMessage(
             (message: any) => {
-                console.log("RECEIVED", message);
+
                 const { data, command } = message;
 
                 if (command === "run") {
                     this._addHeader(data);
                 } else if (command === "save") {
                     const prevData: any = ctx.workspaceState.get("form-data");
-                    console.log("PREV", prevData);
+                    console.log("RECEIVED", message);
+
                     const newData: IFormData = {
-                        textBlockFieldValue: data.textBlockFieldValue || prevData.textBlockFieldValue || "",
-                        rootPathFieldValue: data.rootPathFieldValue || prevData.rootPathFieldValue || "",
-                        skipItemsList: data.skipItemsList || prevData.skipItemsList || [],
-                        fileTypesField: data.fileTypesField || prevData.fileTypesField || []
+                        textBlockFieldValue: data.textBlockFieldValue || prevData?.textBlockFieldValue || "",
+                        rootPathFieldValue: data.rootPathFieldValue || prevData?.rootPathFieldValue || "",
+                        skipItemsList: data.skipItemsList || prevData?.skipItemsList || [],
+                        fileTypesField: data.fileTypesField || prevData?.fileTypesField || []
                     };
 
                     ctx.workspaceState.update("form-data", newData);
@@ -317,26 +318,26 @@ export class AddHeaderPanel {
                             <ul id="skip-path-list"></ul>
                         </div>
 
-                        <em>
-                            Warning: Make sure to backup and/or commit your project - and verify that all the fields are
-                            filled accordingly to your needs - before hitting "Run". Running this carelessly may result in files
-                            getting messed up.
-                        </em>
-
+                        <div class="field-container">
+                            <em>
+                                <strong>Warning:</strong> Make sure to backup and/or commit your project before running. Running this without proper assessment may mess up your files.
+                            </em>
+                        </div>
                         <vscode-button name="run-button" appearance="primary">Run</vscode-button>
                     </section>
 
                     <script type="module" src="${webviewUri}"></script>
                     <script>
                         window.addEventListener("message", (e) => {
-                            console.log("MY:", e);
                             if(e.data.fileTypesField){
                                 return;
                             }
                             const { fileTypesField } = e.data.data;
                             const fileTypesList = document.getElementById("selected-file-types-list");
                             
-                            console.log("FILETYPESFIELD", fileTypesField);
+                            if(!fileTypesField){
+                                return;
+                            }
                             fileTypesField.forEach((type) => {
                                 const newListItem = document.createElement("vscode-tag");
 
@@ -347,15 +348,19 @@ export class AddHeaderPanel {
                                 removeButton.innerHTML = "x";
                                 removeButton.addEventListener("click", (e) => {
                                     e.stopPropagation();
-                                    selectedFileTypes = selectedFileTypes.filter((target) => target !== newType);
+                                   // selectedFileTypes = selectedFileTypes.filter((target) => target !== newType);
                                     const tags = Array.from(fileTypesList.getElementsByTagName("vscode-tag"));
                                     const updatedListDOM = tags.forEach((target, i) => {
-                                        if (target.innerHTML.includes(newType) === true) {
+                                        if (target.innerHTML.includes(type) === true) {
                                             fileTypesList.removeChild(target);
                                         }
                                     });
-                                    console.log(updatedListDOM);
-                                    console.log(newType);
+
+                                   this.postMessage({
+                                    command: "delete",
+                                    data: { delete: type }
+                                   })
+
                                 });
 
                                 newListItem.appendChild(listItemText).appendChild(removeButton);
