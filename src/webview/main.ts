@@ -147,8 +147,13 @@ const main = () => {
 
     window.addEventListener("message", (e) => {
 
-        if (e.data.command === "delete") {
+        if (e.data.command === "delete-type") {
             selectedFileTypes = selectedFileTypes.filter((a, b) => a !== e.data.data.delete);
+
+            submitData("save");
+            return;
+        } else if (e.data.command === "delete-path") {
+            skipPaths = skipPaths.filter((a, b) => a !== e.data.data.delete);
 
             submitData("save");
             return;

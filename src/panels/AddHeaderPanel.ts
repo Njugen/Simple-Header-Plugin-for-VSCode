@@ -329,44 +329,73 @@ export class AddHeaderPanel {
                     <script type="module" src="${webviewUri}"></script>
                     <script>
                         window.addEventListener("message", (e) => {
-                            if(e.data.fileTypesField){
-                                return;
-                            }
-                            const { fileTypesField } = e.data.data;
+                            const { fileTypesField, skipItemsList } = e.data.data;
                             const fileTypesList = document.getElementById("selected-file-types-list");
-                            
-                            if(!fileTypesField){
-                                return;
-                            }
-                            fileTypesField.forEach((type) => {
-                                const newListItem = document.createElement("vscode-tag");
+                            const skipPathList = document.getElementById("skip-path-list");
 
-                                const listItemText = document.createElement("span");
-                                listItemText.innerHTML = type;
+                            if(fileTypesField){        
+                                fileTypesField.forEach((type) => {
+                                    const newListItem = document.createElement("vscode-tag");
 
-                                const removeButton = document.createElement("button");
-                                removeButton.innerHTML = "x";
-                                removeButton.addEventListener("click", (e) => {
-                                    e.stopPropagation();
-                                   // selectedFileTypes = selectedFileTypes.filter((target) => target !== newType);
-                                    const tags = Array.from(fileTypesList.getElementsByTagName("vscode-tag"));
-                                    const updatedListDOM = tags.forEach((target, i) => {
-                                        if (target.innerHTML.includes(type) === true) {
-                                            fileTypesList.removeChild(target);
-                                        }
+                                    const listItemText = document.createElement("span");
+                                    listItemText.innerHTML = type;
+
+                                    const removeButton = document.createElement("button");
+                                    removeButton.innerHTML = "x";
+                                    removeButton.addEventListener("click", (e) => {
+                                        e.stopPropagation();
+                                    
+                                        const tags = Array.from(fileTypesList.getElementsByTagName("vscode-tag"));
+                                        const updatedListDOM = tags.forEach((target, i) => {
+                                            if (target.innerHTML.includes(type) === true) {
+                                                fileTypesList.removeChild(target);
+                                            }
+                                        });
+
+                                        this.postMessage({
+                                            command: "delete-type",
+                                            data: { delete: type }
+                                        })
+
                                     });
 
-                                   this.postMessage({
-                                    command: "delete",
-                                    data: { delete: type }
-                                   })
+                                    newListItem.appendChild(listItemText).appendChild(removeButton);
 
-                                });
+                                    fileTypesList.appendChild(newListItem);
+                                })
+                            }
 
-                                newListItem.appendChild(listItemText).appendChild(removeButton);
+                            if(skipItemsList){
+                                skipItemsList.forEach((path) => {
+                                    const newListItem = document.createElement("li");
 
-                                fileTypesList.appendChild(newListItem);
-                            })
+                                    const listItemText = document.createElement("span");
+                                    listItemText.innerHTML = path;
+
+                                    const removeButton = document.createElement("button");
+                                    removeButton.innerHTML = "x";
+                                    removeButton.addEventListener("click", (e) => {
+                                        e.stopPropagation();
+                                    
+                                        const listItems = Array.from(skipPathList.getElementsByTagName("li"));
+                                        const updatedListDOM = listItems.forEach((item, i) => {
+                                            if (item.innerHTML.includes(path) === true) {
+                                                skipPathList.removeChild(item);
+                                            }
+                                        });
+
+                                        this.postMessage({
+                                            command: "delete-path",
+                                            data: { delete: path }
+                                        })
+
+                                    });
+
+                                    newListItem.appendChild(listItemText).appendChild(removeButton);
+
+                                    skipPathList.appendChild(newListItem);
+                                })
+                            }
                             
                         })
                     </script>
