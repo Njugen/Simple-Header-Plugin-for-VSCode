@@ -20,9 +20,13 @@ export class AddHeaderPanel {
         rootPathFieldValue: "",
         skipItemsList: [],
         fileTypesField: []
-    }
+    };
+    private _cssPath: vscode.Uri;
 
     private constructor(panel: vscode.WebviewPanel, ctx: vscode.ExtensionContext) {
+        this._cssPath = vscode.Uri.joinPath(ctx.extensionUri, "/out", "style.css");
+
+
         this._panel = panel;
 
         this._panel.webview.html = this._getWebviewContent(this._panel.webview, ctx.extensionUri);
@@ -186,6 +190,7 @@ export class AddHeaderPanel {
 
     private _getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
         const webviewUri = getUri(webview, extensionUri, ["out", "webview.js"]);
+        const cssUri = getUri(webview, extensionUri, ["out", "style.css"])
         const nonce = getNonce();
 
         return `
@@ -195,97 +200,8 @@ export class AddHeaderPanel {
                     <meta charset="UTF-8"><
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; font-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
+                    <link rel="stylesheet" type="text/css" href="${cssUri}" />
                     <title>Cat Coding</title>
-
-                    <style>
-                        section#wrapper {
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            flex-direction: column;
-                        }
-
-                        div.field-container {
-                            width: 60%;
-                            max-width: 800px;
-                            margin: 1rem 0;
-                        }
-
-                        label {
-                            font-weight: bold;
-                        }
-
-                        vscode-text-area {
-                            width: 100%;
-                            display: block;
-                        }
-
-                        vscode-text-field {
-                            width: 100%;
-                            display: block;
-                        }
-
-                        [name="add-type-button"] {
-
-                        }
-
-                        div#field-grid {
-                            display: flex;
-                            align-items: center
-                        }
-
-                        div#field-grid vscode-button {
-                            margin-left: 1rem;
-                        }
-
-                        vscode-tag {
-                            margin: 0.25rem
-                        }
-
-                        vscode-tag {
-                            margin-top: 0.5rem;
-                            margin-bottom: 0.5rem;
-                        }
-
-                        vscode-tag button {
-                            margin-left: 0.5rem;
-                            cursor: pointer;
-                            opacity: 0.75;
-                        } 
-
-                        vscode-tag button:hover {
-                            opacity: 0.5 
-                        } 
-
-                        div#selected-file-types-list {
-                            margin: 1rem 0;
-                        }
-
-                        ul#skip-path-list {
-                            padding: 0;
-                            margin: 1rem 0;
-                        }
-
-                        ul#skip-path-list > li {
-                            display: flex;
-                            flex-direction: row;
-                            justify-content: space-between;
-                            padding: 0.75rem 0rem;
-                        }
-
-                        ul#skip-path-list > li:not(:last-child){
-                            border-bottom: 1px solid rgba(255, 255, 255, 0.2)
-                        }
-
-                        ul#skip-path-list > li > button {
-                            cursor: pointer;
-                            opacity: 0.75;
-                        }
-
-                        ul#skip-path-list > li > button:hover {
-                            opacity: 1
-                        }
-                    </style>
                 </head>
                 <body> 
                     <section id="wrapper">

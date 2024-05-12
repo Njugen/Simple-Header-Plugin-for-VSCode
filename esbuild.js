@@ -17,9 +17,20 @@ const extensionConfig = {
     external: ["vscode"],
 };
 
+const stylingConfig = {
+    ...baseConfig,
+    platform: "node",
+    mainFields: ["module", "main"],
+    format: "cjs",
+    entryPoints: ["./src/styling/header_panel.css"],
+    outfile: "./out/style.css",
+    external: ["vscode"],
+};
+
 (async () => {
     try {
         await build(extensionConfig);
+        await build(stylingConfig);
         console.log("build complete");
     } catch (err) {
         process.stderr.write(err.stderr);
