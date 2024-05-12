@@ -12,11 +12,15 @@ export function activate(ctx: vscode.ExtensionContext) {
 	let panel: vscode.WebviewPanel | undefined;
 	// Find out whether or not this panel is in the background or not
 
-	const addHeadersCMD = commands.registerCommand("vscode-header-plugin.add-headers-to-files", () => {
+	const addHeadersCMD = commands.registerCommand("vscode-header-plugin.add-headers-to-files-ui", () => {
 
 		// If panel exists then, then focus on it.
 
 		AddHeaderPanel.render(ctx);
+	});
+
+	const runHeader = commands.registerCommand("vscode-header-plugin.add-headers-to-files", () => {
+
 	});
 
 	ctx.subscriptions.push(addHeadersCMD);
