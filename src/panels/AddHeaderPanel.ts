@@ -44,8 +44,6 @@ export class AddHeaderPanel {
             command: "preset",
             data: storedFormData || this._presetFormData
         });
-
-        //this._addHeader(this._presetFormData);
     }
 
     public static render(ctx: vscode.ExtensionContext) {
@@ -82,13 +80,9 @@ export class AddHeaderPanel {
         // First, check whether or not the filesystem is editable
         const writingPermitted: boolean | undefined = workspace.fs.isWritableFileSystem("file");
         const initialPath: string = "D:\/gitlab\/vscode-header-plugin\/vscode-header-plugin\/src";
-        //vscode-header-plugin.testcmd
-        // Dive deeper into file tree
-
-        // console.log("AAAA", props);
 
         const workspaceFolders = workspace.workspaceFolders;
-        // console.log("WWWWW", workspace.rootPath);
+
         const dive = async (path: string): Promise<void> => {
             const srcURI: vscode.Uri = Uri.file(path);
             const items = await workspace.fs.readDirectory(srcURI);
@@ -105,12 +99,7 @@ export class AddHeaderPanel {
                 const itemName = item[0];
                 const typeEnum = item[1];
                 const rootPath = path;
-                const currentUri: vscode.Uri = Uri.file(rootPath);
 
-                // console.log("ITEM", itemName, typeEnum);
-
-                //   console.log("ITEM NAME", itemName);
-                //   console.log("PATH", rootPath);
                 console.log("SKIP", skipItemsList, String.raw`${path}/${itemName}`);
                 const ignore = [
                     "node_modules",
@@ -128,13 +117,10 @@ export class AddHeaderPanel {
                     //const extRegex = /^.*\.(ts|js|tsx|jsx|css|scss|txt)$/;
                     const fileTypesString = fileTypesField.join("|");
                     const extRegex = new RegExp(`^.*\.(${fileTypesString})$`);
-                    //  console.log("REGEX", extRegex);
-                    //  console.log("MATCH");
                     if (itemName.match(extRegex)) {
-                        //    console.log("FILE", itemName);
                         const fileUri: vscode.Uri = Uri.file(`${rootPath}/${itemName}`);
                         const fileContents = await workspace.fs.readFile(fileUri);
-                        //  console.log("FILE CONTENTS", fileContents);
+
                         const contentsAsString = new TextDecoder().decode(fileContents);
 
                         //console.log("CONTENTS AS STRING", fileContents);

@@ -39,47 +39,49 @@ const main = () => {
 
     };
 
+    const renderListItems = (section: HTMLElement, filledList: any[], listTag: string, newValue: any) => {
+        if (filledList.includes(newValue) || newValue.length === 0) {
+            return;
+        }
+
+        filledList.push(newValue);
+
+        const newListItem = document.createElement(listTag);
+
+        const listItemText = document.createElement("span");
+        listItemText.innerHTML = newValue;
+
+        const removeButton = document.createElement("button");
+        removeButton.innerHTML = "x";
+        removeButton.addEventListener("click", (e) => {
+            e.stopPropagation();
+            filledList = filledList.filter((target: string) => target !== newValue);
+            const listItems = Array.from(section.getElementsByTagName(listTag));
+            listItems.forEach((target, i) => {
+                if (target.innerHTML.includes(newValue) === true) {
+                    section.removeChild(target);
+                }
+            });
+
+            submitData("save");
+        });
+
+        newListItem.appendChild(listItemText).appendChild(removeButton);
+
+        section.appendChild(newListItem);
+
+        submitData("save");
+    }
+
     const addFileType = (e: any, presetFileTypes: Array<string> = []): void => {
         const fileTypesList = document.getElementById("selected-file-types-list") as HTMLDivElement;
         const fileTypesField = document.querySelector('[name="file-types-field"]') as HTMLInputElement;
 
         const process = (type: string): void => {
             if (fileTypesList && fileTypesField) {
-                const newType = type;
-
-                if (selectedFileTypes.includes(newType) || newType.includes(" ") === true || newType.length === 0) {
-                    return;
-                }
-
-                selectedFileTypes.push(newType);
-
-                const newListItem = document.createElement("vscode-tag");
-
-                const listItemText = document.createElement("span");
-                listItemText.innerHTML = newType;
-
-                const removeButton = document.createElement("button");
-                removeButton.innerHTML = "x";
-                removeButton.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    selectedFileTypes = selectedFileTypes.filter((target: string) => target !== newType);
-                    const tags = Array.from(fileTypesList.getElementsByTagName("vscode-tag"));
-                    const updatedListDOM = tags.forEach((target, i) => {
-                        if (target.innerHTML.includes(newType) === true) {
-                            fileTypesList.removeChild(target);
-                        }
-                    });
-
-                    submitData("save");
-                });
-
-                newListItem.appendChild(listItemText).appendChild(removeButton);
-
-                fileTypesList.appendChild(newListItem);
-
-                submitData("save");
+                renderListItems(fileTypesList, selectedFileTypes, "vscode-tag", type);
             }
-        }
+        };
 
         if (presetFileTypes.length > 0) {
             presetFileTypes.forEach((presetFileType: string) => {
@@ -89,9 +91,6 @@ const main = () => {
             process(fileTypesField.value);
             fileTypesField.value = "";
         }
-
-
-
     };
 
     const addPath = (): void => {
@@ -99,41 +98,9 @@ const main = () => {
         const pathField = document.querySelector('[name="skip-path-field"]') as HTMLInputElement;
 
         if (skipPathList && pathField) {
-            const newPath = pathField.value;
-
-            if (skipPaths.includes(newPath) || newPath.length === 0) {
-                return;
-            }
-
-            skipPaths.push(`${rootPathField.value}/${newPath}`);
-
-            const newListItem = document.createElement("li");
-
-            const listItemText = document.createElement("span");
-            listItemText.innerHTML = newPath;
-
-            const removeButton = document.createElement("button");
-            removeButton.innerHTML = "x";
-            removeButton.addEventListener("click", (e) => {
-                e.stopPropagation();
-                skipPaths = skipPaths.filter((target: string) => target !== newPath);
-                const tags = Array.from(skipPathList.getElementsByTagName("li"));
-                const updatedListDOM = tags.forEach((target, i) => {
-                    if (target.innerHTML.includes(newPath) === true) {
-                        skipPathList.removeChild(target);
-                    }
-                });
-
-                submitData("save");
-                //skipPathList.childNodes = updatedListDOM;
-            });
+            renderListItems(skipPathList, skipPaths, "li", pathField.value)
 
 
-            newListItem.appendChild(listItemText)
-            newListItem.appendChild(removeButton);
-
-            skipPathList.appendChild(newListItem);
-            pathField.value = "";
         }
 
         submitData("save");
@@ -149,16 +116,13 @@ const main = () => {
 
         if (e.data.command === "delete-type") {
             selectedFileTypes = selectedFileTypes.filter((a, b) => a !== e.data.data.delete);
-
             submitData("save");
             return;
         } else if (e.data.command === "delete-path") {
             skipPaths = skipPaths.filter((a, b) => a !== e.data.data.delete);
-
             submitData("save");
             return;
         } else {
-            console.log("LLLLLLLLLL", e);
             selectedFileTypes = e.data.data.fileTypesField;
             textBlockField.value = e.data.data.textBlockFieldValue;
             rootPathField.value = e.data.data.rootPathFieldValue;
