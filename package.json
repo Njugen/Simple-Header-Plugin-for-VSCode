@@ -19,6 +19,10 @@
         "title": "Hello World"
       },
       {
+        "command": "vscode-header-plugin.add-headers-to-files-LEGACY",
+        "title": "Add header to files (LEGACY)"
+      },
+      {
         "command": "vscode-header-plugin.add-headers-to-files",
         "title": "Add header to files"
       }
