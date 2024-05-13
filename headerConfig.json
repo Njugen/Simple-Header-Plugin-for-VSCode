@@ -1,5 +1,5 @@
 {
-    "startDir": null,
+    "startDir": "D:\\gitlab\\vscode-header-plugin\\vscode-header-plugin\\src",
     "headerText": [
         "/**",
         "*",
@@ -18,5 +18,7 @@
         "sass",
         "scss"
     ],
-    "ignoreItems": []
+    "ignoreItems": [
+        "utilities/getNonce.ts"
+    ]
 }
