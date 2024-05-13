@@ -1,71 +1,68 @@
-# vscode-header-plugin README
+# Simple Header Plugin 1.0.0
 
-This is the README for your extension "vscode-header-plugin". After writing up a brief description, we recommend including the following sections.
+**Issue:** I just needed a simple-to-use plugin that could append a header block (a copyright notice in my case) onto a large batch of files in my other projects. Unfortunately - and surprisingly - a lot of existing plugins for this purpose is either outdated, unmaintained or have unclear usage instructions. The only purpose of this tool is just to give me and other developers a straight forward way to append a text block into targetted files without hassle... nothing more, nothning less.
 
-## Features
+## Usage
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+The idea is to place a text block into targetted files inside a project folder. The plugin uses recursion for this purpose, and only target filetypes stated in the configuration. Specific items can be ignored as well
 
-For example if there is an image subfolder under your extension project workspace:
+### Config
 
-\!\[feature X\]\(images/feature-x.png\)
+1. Create a file **headerConfig.json** in your workspace's root directory. E.g. __D:\my-files\my-project\headerConfig.json__
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
-## Requirements
+2. Place this code block into the JSON-file
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+```
+{
+    "startDir": "D:/vscode-header-plugin/src",
+    "headerText": [],
+    "fileTypes": [],
+    "ignoreItems": [
+        "utilities/blablabla.ts"
+    ]
+}
+```
 
-## Extension Settings
+- **startDir (string | null):** The directory of the files you wish to append a text block to (default's to the workspace's root folder if null). Only specify a folder relevant to your project. Careless use may mess up your system
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+- **headerText (Array<string>):** Chunks of strings that makes up the text block you wish to append. E.g.
 
-For example:
+```
+    [
+        "/**",
+        "*",
+        "*",
+        "*  Hahaha",
+        "*",
+        "*",
+        "**/"
+    ]
+```
 
-This extension contributes the following settings:
+Should result in the following to be appended into your files:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+```
+/**
+*
+*
+*  Hahaha
+*
+*
+**/
+```
 
-## Known Issues
+- **fileTypes (Array<string>)**: Allow files of certain extensions to have the text block appended. Other files are ignored. E.g. __["tsx", "ts", "js", "jsx", "css", "sass","scss"]__
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- **ignoreItems (Array<string>):** A list of paths to specific items to ignore. Paths are relative to **startDir**. E.g. __["/utils/son-goku.js", "/limit-break"]__. This ignores the file __D:/vscode-header-plugin/src/utils/son-goku.js__, as well as all files located in the __D:/vscode-header-plugin/src/limit-break__ folder
 
-## Release Notes
 
-Users appreciate release notes as you update your extension.
+### Run
+1. Install this plugin into visual studio code
+2. Hit Ctrl + Shift + Enter and select **Simple Header: Add headers to files** from the command bar
 
-### 1.0.0
+### Warning!
+Backup and/or commit your project, and make a proper assessment of **headerConfig.json** file before running the plugin. Careless use may mess up your project.
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+# MIT License
+This plugin falls under the MIT License (see LICENSE.md). Use it however you like, change it however you like.

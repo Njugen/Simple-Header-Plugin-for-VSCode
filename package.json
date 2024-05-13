@@ -15,16 +15,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-header-plugin.helloWorld",
-        "title": "Hello World"
-      },
-      {
-        "command": "vscode-header-plugin.add-headers-to-files-LEGACY",
-        "title": "Add header to files (LEGACY)"
-      },
-      {
         "command": "vscode-header-plugin.add-headers-to-files",
-        "title": "Add header to files"
+        "title": "Simple Header: Add headers to files"
       }
     ]
   },
