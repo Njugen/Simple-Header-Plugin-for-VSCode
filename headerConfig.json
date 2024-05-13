@@ -1,0 +1,22 @@
+{
+    "startDir": null,
+    "headerText": [
+        "/**",
+        "*",
+        "*",
+        "*  Hahaha",
+        "*",
+        "*",
+        "**/"
+    ],
+    "fileTypes": [
+        "tsx",
+        "ts",
+        "js",
+        "jsx",
+        "css",
+        "sass",
+        "scss"
+    ],
+    "ignoreItems": []
+}
