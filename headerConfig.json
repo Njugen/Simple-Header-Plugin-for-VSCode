@@ -24,5 +24,7 @@
         "sass",
         "scss"
     ],
-    "ignoreItems": []
+    "ignoreItems": [
+        "/src/extension.ts"
+    ]
 }

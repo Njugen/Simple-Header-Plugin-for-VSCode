@@ -52,7 +52,9 @@ const activate = (ctx: vscode.ExtensionContext) => {
 
 				console.log("IGNORE ITEMS", String.raw`${fullStartDirPath}/${itemName}`);
 
-				if (ignoreItems.includes(String.raw`${fullStartDirPath}/${itemName}`) || ignore.includes(itemName)) {
+				const ignoreItemsFullPaths = ignoreItems.map((item) => `${rootPath}/${item}`);
+
+				if (ignoreItemsFullPaths.includes(String.raw`${fullStartDirPath}/${itemName}`) || ignore.includes(itemName)) {
 					return;
 				}
 
