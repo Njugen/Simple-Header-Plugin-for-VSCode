@@ -67,13 +67,7 @@ Backup and/or commit your project - and make a proper assessment of the **header
 
 ## Tests
 
-Automated tests will be added soon. Basic manual tests indicates the extension works with Windows 10. Mac and Linux
-
-### Windows 10
-
-### MacOS
-
-### Linux
+Preliminary manual tests indicates the plugin works as expected in Windows 10. Nothing has been tested for Mac nor Linux. 
 
 # MIT License
 This plugin falls under the MIT License (see LICENSE.md). Use it however you like, change it however you like and distribute it however you like. Contributions are appreciated, just keep it simple.
