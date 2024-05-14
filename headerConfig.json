@@ -11,9 +11,7 @@
         "*  For more information, see the LICENSE file",
         "*",
         "*",
-        "**/",
-        "\n",
-        "\n"
+        "**/"
     ],
     "fileTypes": [
         "tsx",
@@ -24,7 +22,5 @@
         "sass",
         "scss"
     ],
-    "ignoreItems": [
-        "/src/extension.ts"
-    ]
+    "ignoreItems": []
 }
