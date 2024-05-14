@@ -67,6 +67,8 @@ Backup and/or commit your project - and make a proper assessment of the **header
 
 ## Tests
 
+Automated tests will be added soon. Basic manual tests indicates the extension works with Windows 10. Mac and Linux
+
 ### Windows 10
 
 ### MacOS

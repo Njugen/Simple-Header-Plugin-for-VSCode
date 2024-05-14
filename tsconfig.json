@@ -16,7 +16,7 @@
 		"experimentalDecorators": true,
 		"strictPropertyInitialization": false,
 		"declaration": true,
-		"sourceMap": false,
+		"sourceMap": true,
 		"noEmitOnError": true,
 		"strict": true,
 		"strictNullChecks": true,
