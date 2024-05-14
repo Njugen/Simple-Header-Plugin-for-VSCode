@@ -2,21 +2,58 @@ const assert = require("assert");
 const vscode = require("vscode");
 
 suite('Test Simple Header Plugin for VSCode', () => {
-    const { commands, workspace, fs, Uri } = vscode;
-    const { rootPath } = workspace;
+    const { commands, workspace, Uri } = vscode;
+    const { rootPath, fs } = workspace;
 
-    test("'Simple Header: Add headers to files' appends textblock to documents", () => {
-        commands.executeCommand("vscode-header-plugin.add-headers-to-files");
+    const wait = async () => new Promise((resolve, reject) => {
+        setTimeout(resolve, 5000);
+    });
 
-        //const extensionsFile = Uri.file(`${workspace.rootPath}/src/extensions.ts`);
-        //
-        //isExportDeclaration()
+    test("'Simple Header: Add headers to files' command prepends textblock to a document", async function () {
+        this.timeout(15000);
+        const mockRootPath = `${rootPath}/test/mocks/`;
+        const mockConfigFilePath = `${rootPath}/test/mocks/headerConfig.json`;
 
-        const fileUri = Uri.file(`${rootPath}/src/extension.ts`);
-        const contents = fs.readFile(fileUri);
+        // Work with the mock config file
+        const configFileUri = Uri.file(mockConfigFilePath);
+        const configFile = await fs.readFile(configFileUri);
+        const decodedFile = new TextDecoder().decode(configFile);
 
+        // Decode file and get the settings
+        let properties = JSON.parse(decodedFile);
+        const headerTextBlock = properties.headerText.join("\n");
+
+        commands.executeCommand("vscode-header-plugin.add-headers-to-files", [mockRootPath, mockConfigFilePath]);
+        await wait();
+
+        const fileUri = Uri.file(`${mockRootPath}/testfile.js`);
+        const contents = await fs.readFile(fileUri);
         const data = new TextDecoder().decode(contents);
 
-        assert.ok(data.includes("Copyright"));
+        assert.ok(data.includes(headerTextBlock));
+    });
+
+    test("'Simple Header: Add headers to files' command prepends textblock to a document within a subfolder", async function () {
+        this.timeout(15000);
+        const mockRootPath = `${rootPath}/test/mocks`;
+        const mockConfigFilePath = `${rootPath}/test/mocks/headerConfig.json`;
+
+        // Work with the mock config file
+        const configFileUri = Uri.file(mockConfigFilePath);
+        const configFile = await fs.readFile(configFileUri);
+        const decodedFile = new TextDecoder().decode(configFile);
+
+        // Decode file and get the settings
+        let properties = JSON.parse(decodedFile);
+        const headerTextBlock = properties.headerText.join("\n");
+
+        commands.executeCommand("vscode-header-plugin.add-headers-to-files", [mockRootPath, mockConfigFilePath]);
+        await wait();
+
+        const fileUri = Uri.file(`${mockRootPath}/level-1-a/testfile1.tsx`);
+        const contents = await fs.readFile(fileUri);
+        const data = new TextDecoder().decode(contents);
+
+        assert.ok(data.includes(headerTextBlock));
     });
 });

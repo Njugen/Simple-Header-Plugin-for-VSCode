@@ -1,0 +1,22 @@
+{
+    "headerText": [
+        "/**",
+        "*",
+        "*",
+        "*  Copyright (c) Mr Agetea Em'el",
+        "*  Java City, Springboot Camp 23345 NoNet",
+        "*",
+        "*",
+        "**/"
+    ],
+    "fileTypes": [
+        "tsx",
+        "ts",
+        "js",
+        "jsx",
+        "css",
+        "sass",
+        "scss"
+    ],
+    "ignoreItems": []
+}

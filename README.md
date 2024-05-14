@@ -1,6 +1,6 @@
-# Simple Header Plugin for VSCode
+# Simple Header Plugin for VSCode (in development)
 
-**Issue:** I just needed an easy way to prepend a textblock onto a larger batch of files in my projects. Surprisingly, a lot of VSCode plugins for this purpose is either outdated, unmaintained or have very unclear instructions. This tool was created to get around that and make it simple to prepend textblocks to files without hassle.
+**Issue:** I just needed an easy way to prepend a textblock (e.g. copyright notice) onto a larger batch of files in my projects. Surprisingly, a lot of VSCode plugins for this purpose is either outdated or have very unclear instructions. This basic tool was created to get around that and make it simple to prepend textblocks to files without hassle.
 
 The plugin recursively loops through the workspace's directories and prepends a textblock to files of specific filetypes and ignores certain files stated in the configuration. 
 
@@ -26,7 +26,7 @@ The plugin recursively loops through the workspace's directories and prepends a 
 
 ### Explanation of headerConfig.json
 
-- **startDir (string | null):** The directory of the files you wish to prepend a textblock to (defaults to the workspace's root folder if null). Only specify a folder relevant to your project. Careless use may mess up your system
+- **startDirs (string[], optional):** The directories of the files you wish to prepend a textblock to (defaults to the workspace's root folder if not present). Files within all levels of subfolders are taken into consideration. Only specify folders relevant to your project. Careless use may mess up your system
 
 - **headerText (string[]):** Chunks of strings that makes up the textblock you wish to prepend. E.g.
 
@@ -56,7 +56,7 @@ Should result in the following being prepended to your files:
 
 - **fileTypes (string[])**: Allow files of certain extensions to have the textblock prepended, e.g. __["tsx", "ts", "js", "jsx", "css", "sass","scss"]__. Other files are ignored. 
 
-- **ignoreItems (string[]):** A list of paths to specific items to ignore. Paths are relative to **startDir**. E.g. __["/utils/son-goku.js", "/limit-break"]__ ignores the file __D:/vscode-header-plugin/src/utils/son-goku.js__, as well as all files located in the __D:/vscode-header-plugin/src/limit-break__ folder
+- **ignoreItems (string[]):** A list of paths to specific items to ignore. E.g. __D:/vscode-header-plugin/src/utils/son-goku.js__. Ignoring a folder also means ignoring all files nested in that folder.
 
 
 ### Run
@@ -67,7 +67,25 @@ Backup and/or commit your project - and make a proper assessment of the **header
 
 ## Tests
 
-Preliminary manual tests indicates the plugin works as expected in Windows 10. Nothing has been tested for Mac nor Linux. 
+Preliminary manual tests indicates the plugin works as expected on Windows 10. The plugin has not been tested in Linux nor Mac yet, so avoid using it on those systems for now...
+
+Automated tests are located in __/test/__ along with necessary mocks. Currently there are only a very basic tests for certain features. More relevant tests will be added later to ensure high confidence in the plugin truly working as intended.
+
+### Run tests
+
+1. Open the project
+2. In the project's terminal, run the following command:
+
+```
+    npm run test
+```
+
+The results shows up in the terminal once the tests have been completed.
+
+## Todo
+
+- Write tests to thoroughly cover important cases that occurs when changing headerConfig.json
+- Configure bundling
 
 # MIT License
 This plugin falls under the MIT License (see LICENSE.md). Use it however you like, change it however you like and distribute it however you like. Contributions are appreciated, just keep it simple.

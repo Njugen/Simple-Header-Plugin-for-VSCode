@@ -1,4 +1,3 @@
-
 import * as vscode from 'vscode';
 
 interface IProperties {
@@ -9,15 +8,18 @@ interface IProperties {
 }
 
 // Run this when the extension is activated
-const activate = (ctx: vscode.ExtensionContext) => {
+const activate = async (ctx: vscode.ExtensionContext) => {
 	const { workspace, Uri, commands, FileSystemError, window } = vscode;
 
 	// Run this when the user runs this command
-	const addHeadersCMD = commands.registerCommand("vscode-header-plugin.add-headers-to-files", async () => {
+	const addHeadersCMD = commands.registerCommand("vscode-header-plugin.add-headers-to-files", async (cmdArg: any[]) => {
 		const { fs, rootPath } = workspace;
 
+		const root = (cmdArg && cmdArg[0]) || rootPath;
+		const configFilePath = (cmdArg && cmdArg[1]) || `${root}/headerConfig.json`;
+
 		// Work with the plugin's config file
-		const configFileUri: vscode.Uri = Uri.file(`${rootPath}/headerConfig.json`);
+		const configFileUri: vscode.Uri = Uri.file(configFilePath);
 		const configFile = await fs.readFile(configFileUri);
 		const decodedFile: string = new TextDecoder().decode(configFile);
 
@@ -25,13 +27,13 @@ const activate = (ctx: vscode.ExtensionContext) => {
 		let properties: IProperties = JSON.parse(decodedFile);
 		const headerTextBlock: string = properties.headerText.join("\n");
 		const { fileTypes, startDirs, ignoreItems } = properties;
-		const ignoreItemsFullPaths = ignoreItems.map((item) => `${rootPath}/${item}`);
+		const ignoreItemsFullPaths = ignoreItems.map((item) => `${root}/${item}`);
 
 		// Start looping through the folders in recursion, starting from startPath
 		const dive = async (startDir?: string): Promise<void> => {
 			// Read the directory and return all items (sub directories and files) in it
-			const fullStartDirPath = startDir ? (rootPath + "/" + startDir) : rootPath;
-			const srcURI: vscode.Uri = Uri.file(fullStartDirPath || rootPath || "");
+			const fullStartDirPath = startDir ? (root + "/" + startDir) : root;
+			const srcURI: vscode.Uri = Uri.file(fullStartDirPath || root || "");
 			const items = await workspace.fs.readDirectory(srcURI);
 
 			// Loop through the folder's items
@@ -50,11 +52,6 @@ const activate = (ctx: vscode.ExtensionContext) => {
 
 				// If the current item's path equals either those listed in mandatory list above, or the ignoreItems
 				// property in the config file, then proceed to the next iteration
-
-				console.log("IGNORE ITEMS", String.raw`${fullStartDirPath}/${itemName}`);
-
-
-
 				if (ignoreItemsFullPaths.includes(String.raw`${fullStartDirPath}/${itemName}`) || ignore.includes(itemName)) {
 					return;
 				}
@@ -84,7 +81,7 @@ const activate = (ctx: vscode.ExtensionContext) => {
 					// This is a directory
 					// Continue the recursion
 
-					await dive(`${rootPath}/${itemName}`);
+					await dive(`${root}/${itemName}`);
 				}
 			});
 

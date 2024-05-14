@@ -20,7 +20,6 @@ const extensionConfig = {
 (async () => {
     try {
         await build(extensionConfig);
-        console.log("build complete");
     } catch (err) {
         process.stderr.write(err.stderr);
         process.exit(1);
@@ -31,17 +30,11 @@ const extensionConfig = {
     const args = process.argv.slice(2);
     try {
         if (args.includes("--watch")) {
-            // Build and watch extension and webview code
-            console.log("[watch] build started");
             await build({
                 ...extensionConfig,
                 ...watchConfig,
             });
-            console.log("[watch] build finished");
-        } else {
-            // Build extension and webview code
             await build(extensionConfig);
-            console.log("build complete");
         }
     } catch (err) {
         process.stderr.write(err.stderr);
