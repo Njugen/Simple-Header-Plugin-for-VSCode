@@ -1,13 +1,19 @@
 {
-    "startDir": "D:\\gitlab\\vscode-header-plugin\\vscode-header-plugin\\src",
+    "startDirs": [
+        "/src",
+        "/out"
+    ],
     "headerText": [
         "/**",
         "*",
         "*",
-        "*  Hahaha",
+        "*  Copyright (c) 2024, <Firstname Lastname>, MIT License",
+        "*  For more information, see the LICENSE file",
         "*",
         "*",
-        "**/"
+        "**/",
+        "\n",
+        "\n"
     ],
     "fileTypes": [
         "tsx",
@@ -18,7 +24,5 @@
         "sass",
         "scss"
     ],
-    "ignoreItems": [
-        "utilities/getNonce.ts"
-    ]
+    "ignoreItems": []
 }

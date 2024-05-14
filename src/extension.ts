@@ -2,7 +2,7 @@
 import * as vscode from 'vscode';
 
 interface IProperties {
-	startDir?: string,
+	startDirs?: string[],
 	headerText: string[],
 	fileTypes: string[],
 	ignoreItems: string[]
@@ -24,12 +24,13 @@ const activate = (ctx: vscode.ExtensionContext) => {
 		// Decode file and get the settings
 		let properties: IProperties = JSON.parse(decodedFile);
 		const headerTextBlock: string = properties.headerText.join("\n");
-		const { fileTypes, startDir, ignoreItems } = properties;
+		const { fileTypes, startDirs, ignoreItems } = properties;
 
 		// Start looping through the folders in recursion, starting from startPath
-		const dive = async (startPath?: string): Promise<void> => {
+		const dive = async (startDir?: string): Promise<void> => {
 			// Read the directory and return all items (sub directories and files) in it
-			const srcURI: vscode.Uri = Uri.file(startPath || rootPath || "");
+			const fullStartDirPath = startDir ? (rootPath + "/" + startDir) : rootPath;
+			const srcURI: vscode.Uri = Uri.file(fullStartDirPath || rootPath || "");
 			const items = await workspace.fs.readDirectory(srcURI);
 
 			// Loop through the folder's items
@@ -39,7 +40,6 @@ const activate = (ctx: vscode.ExtensionContext) => {
 
 				const itemName = item[0];
 				const typeEnum = item[1];
-				const rootPath = startPath;
 
 				// Mandatory ignore these items
 				const ignore = [
@@ -49,7 +49,10 @@ const activate = (ctx: vscode.ExtensionContext) => {
 
 				// If the current item's path equals either those listed in mandatory list above, or the ignoreItems
 				// property in the config file, then proceed to the next iteration
-				if (ignoreItems.includes(String.raw`${startPath}/${itemName}`) || ignore.includes(itemName)) {
+
+				console.log("IGNORE ITEMS", String.raw`${fullStartDirPath}/${itemName}`);
+
+				if (ignoreItems.includes(String.raw`${fullStartDirPath}/${itemName}`) || ignore.includes(itemName)) {
 					return;
 				}
 
@@ -64,7 +67,7 @@ const activate = (ctx: vscode.ExtensionContext) => {
 					if (itemName.match(extRegex)) {
 						// The file type matches those stated in the config file,
 						// start the writing process and insert the text block at the top of the file
-						const fileUri: vscode.Uri = Uri.file(`${rootPath}/${itemName}`);
+						const fileUri: vscode.Uri = Uri.file(`${fullStartDirPath}/${itemName}`);
 						const fileContents = await workspace.fs.readFile(fileUri);
 
 						const contentsAsString = new TextDecoder().decode(fileContents);
@@ -84,7 +87,12 @@ const activate = (ctx: vscode.ExtensionContext) => {
 
 		};
 
-		dive(startDir);
+		if (startDirs && startDirs.length > 0) {
+			startDirs.forEach((dir) => dive(dir));
+		} else {
+			dive();
+		}
+
 	});
 
 	ctx.subscriptions.push(addHeadersCMD);
