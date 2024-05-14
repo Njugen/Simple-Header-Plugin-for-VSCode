@@ -25,6 +25,7 @@ const activate = (ctx: vscode.ExtensionContext) => {
 		let properties: IProperties = JSON.parse(decodedFile);
 		const headerTextBlock: string = properties.headerText.join("\n");
 		const { fileTypes, startDirs, ignoreItems } = properties;
+		const ignoreItemsFullPaths = ignoreItems.map((item) => `${rootPath}/${item}`);
 
 		// Start looping through the folders in recursion, starting from startPath
 		const dive = async (startDir?: string): Promise<void> => {
@@ -52,7 +53,7 @@ const activate = (ctx: vscode.ExtensionContext) => {
 
 				console.log("IGNORE ITEMS", String.raw`${fullStartDirPath}/${itemName}`);
 
-				const ignoreItemsFullPaths = ignoreItems.map((item) => `${rootPath}/${item}`);
+
 
 				if (ignoreItemsFullPaths.includes(String.raw`${fullStartDirPath}/${itemName}`) || ignore.includes(itemName)) {
 					return;
