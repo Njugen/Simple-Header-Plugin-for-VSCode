@@ -1,71 +1,3 @@
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
 
 
 import * as vscode from 'vscode';
@@ -161,7 +93,7 @@ const activate = async (ctx: vscode.ExtensionContext) => {
 		if (startDirs && startDirs.length > 0) {
 			startDirs.forEach((dir) => dive(dir));
 		} else {
-			dive();
+			dive("");
 		}
 
 	});
