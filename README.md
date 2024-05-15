@@ -2,15 +2,29 @@
 
 The plugin recursively __loops through folders within an open workspace__ and applies textblocks to targetted files, taking exceptions into account if any.
 
-While there are a lot of plugins out there for this purpose, surprisingly none of them seem to be functional nor straight forward with documentation - thus the reason I created this for my own needs (adding a copyright notice to a large batch of files in my other projects...)
+While there are a lot of plugins out there for this purpose, surprisingly most of them seem not to be functional nor straight forward with documentation - thus the reason I created this for my own needs (adding a copyright notice to a large batch of files in my other projects...)
 
 ## Geting started
 
+### User Requirements
+
+- Visual Studio Code, version 1.75 or later.
+
+### Installation
+
+1. Download the plugin from (.vsix file listed in the release page) from this repository. 
+2. Open Visual Studio Code and go to the Extensions view
+3. Click __Views and More Actions__
+4. Select __Install from VSIX...__ and select the .vsix file you downloaded.
+
+<p align="center">
+    <img src="./img/screenshot2.png" />
+</p>
+
 ### Config
 
-1. Open **Visual Studio Code** and install this plugin.
-2. Open your workspace's (project) root directory in VSCode
-3. Create a file **headerConfig.json** in your workspace directory. E.g. __D:\my-files\my-project\headerConfig.json__
+1. Open your workspace's (project) root directory in VSCode
+2. Create a file **headerConfig.json** in your workspace directory. E.g. __D:\my-files\my-project\headerConfig.json__
 
 
 4. Place this code block into the JSON-file and save
@@ -76,7 +90,7 @@ Backup and/or commit your project - and make a proper assessment of the **header
 
 ## Tests
 
-Preliminary manual tests indicates the plugin works as expected on Windows 10. The plugin has not been tested in Linux nor Mac yet, so avoid using it on those systems for now...
+Preliminary manual tests indicates the plugin works as expected on Windows 10. The plugin has __not been tested in neither Linux nor Mac__ yet, so avoid using it on those systems for now...
 
 Automated tests are located in __/test/__ along with necessary mocks. Currently there are only a very basic tests for certain features. More relevant tests will be added later to ensure high confidence in the plugin truly working as intended.
 
