@@ -20,6 +20,10 @@
       }
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Njugen/Simple-Header-Plugin-for-VSCode.git"
+  },
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "node ./esbuild.js",
