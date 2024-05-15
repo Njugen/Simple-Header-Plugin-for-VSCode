@@ -1,73 +1,3 @@
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
 import * as vscode from 'vscode';
 
 interface IProperties {
@@ -102,7 +32,6 @@ const activate = async (ctx: vscode.ExtensionContext) => {
 		// Start looping through the folders in recursion, starting from startPath
 		const dive = async (startDir?: string): Promise<void> => {
 			// Read the directory and return all items (sub directories and files) in it
-			console.log("START DIR", startDir);
 			const fullStartDirPath = startDir ? (root + "/" + startDir) : root;
 			const srcURI: vscode.Uri = Uri.file(fullStartDirPath || root || "");
 			const items = await workspace.fs.readDirectory(srcURI);

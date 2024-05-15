@@ -1,9 +1,9 @@
 {
   "name": "vscode-header-plugin",
   "publisher": "nj",
-  "displayName": "vscode-header-plugin",
+  "displayName": "Simple Header Plugin for VSCode",
   "description": "",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -43,9 +43,7 @@
     "esbuild": "^0.16.17",
     "eslint": "^8.57.0",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.4.5",
-    "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.4.0"

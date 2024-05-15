@@ -1,8 +1,8 @@
-# Simple Header Plugin for VSCode (in development)
+# Simple Header Plugin for VSCode - v1.0.0
 
-**Issue:** I just needed an easy way to prepend a textblock (e.g. copyright notice) onto a larger batch of files in my projects. Surprisingly, a lot of VSCode plugins for this purpose is either outdated or have very unclear instructions. This basic tool was created to get around that and make it simple to prepend textblocks to files without hassle.
+The plugin recursively __loops through folders within an open workspace__ and applies textblocks to targetted files, taking exceptions into account if any.
 
-The plugin recursively loops through the workspace's directories and prepends a textblock to files of specific filetypes and ignores certain files stated in the configuration. 
+While there are a lot of plugins out there for this purpose, surprisingly none of them seem to be functional nor straight forward with documentation - thus the reason I created this for my own needs (adding a copyright notice to a large batch of files in my other projects...)
 
 ## Geting started
 
@@ -24,18 +24,23 @@ The plugin recursively loops through the workspace's directories and prepends a 
 }
 ```
 
-### Explanation of headerConfig.json
+## Explanation of headerConfig.json
 
-- **startDirs (string[], optional):** The directories of the files you wish to prepend a textblock to (defaults to the workspace's root folder if not present). Files within all levels of subfolders are taken into consideration. Only specify folders relevant to your project. Careless use may mess up your system
+This file is the foundation of the plugin. Edit it accordingly to your need before running (see instructions below) the plugin.
 
-- **headerText (string[]):** Chunks of strings that makes up the textblock you wish to prepend. E.g.
+### startDirs (string[], optional)
+The directories of the files you wish to prepend a textblock to (defaults to the workspace's root folder if not present). Files within all levels of subfolders are taken into consideration. Only specify folders relevant to your project. Careless use may mess up your system
+
+### headerText (string[])
+Chunks of strings that makes up the textblock you wish to prepend. E.g.
 
 ```
     [
         "/**",
         "*",
         "*",
-        "*  Hahaha",
+        "*  Copyright (c) Mr Agetea Em'el",
+        "*  Java City, Springboot Camp 23345 NoNet",
         "*",
         "*",
         "**/"
@@ -45,25 +50,29 @@ The plugin recursively loops through the workspace's directories and prepends a 
 Should result in the following being prepended to your files:
 
 ```
-/**
-*
-*
-*  Hahaha
-*
-*
-**/
+    /**
+    *
+    *
+    *  Copyright (c) Mr Agetea Em'el
+    *  Java City, Springboot Camp 23345 NoNet
+    *
+    *
+    **/
 ```
 
-- **fileTypes (string[])**: Allow files of certain extensions to have the textblock prepended, e.g. __["tsx", "ts", "js", "jsx", "css", "sass","scss"]__. Other files are ignored. 
+### fileTypes (string[])
+Allow files of certain extensions to have the textblock prepended, e.g. __["tsx", "ts", "js", "jsx", "css", "sass","scss"]__. Other files are ignored. 
 
-- **ignoreItems (string[]):** A list of paths to specific items to ignore. E.g. __D:/vscode-header-plugin/src/utils/son-goku.js__. Ignoring a folder also means ignoring all files nested in that folder.
+### ignoreItems (string[])
+A list of paths to specific items to ignore. E.g. __D:/vscode-header-plugin/src/utils/son-goku.js__. Ignoring a folder also means ignoring all files nested in that folder.
 
-
-### Run
+## Run
 Hit Ctrl + Shift + P and select **Simple Header: Add headers to files** from the command bar. The plugin inserts a textblock based on settings in  __headerConfig.json__ -
 
 ### Warning!
 Backup and/or commit your project - and make a proper assessment of the **headerConfig.json** file - before running this plugin. Careless use may mess up your project.
+
+<img src="./img/screenshot.png" width="100%" />
 
 ## Tests
 
