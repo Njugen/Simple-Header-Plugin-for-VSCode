@@ -35,9 +35,13 @@ __export(extension_exports, {
 module.exports = __toCommonJS(extension_exports);
 var vscode = __toESM(require("vscode"));
 var activate = async (ctx) => {
-  const { workspace, Uri, commands, FileSystemError, window: window2 } = vscode;
+  const { workspace, Uri, commands, window } = vscode;
   const addHeadersCMD = commands.registerCommand("vscode-header-plugin.add-headers-to-files", async (cmdArg) => {
     const { fs, rootPath } = workspace;
+    if (!rootPath) {
+      window.showInformationMessage("Failed to insert textblocks: No open workspace", { modal: false });
+      return;
+    }
     const root = cmdArg && cmdArg[0] || rootPath;
     const configFilePath = cmdArg && cmdArg[1] || `${root}/headerConfig.json`;
     const configFileUri = Uri.file(configFilePath);
@@ -79,7 +83,7 @@ ${contentsAsString}`;
           await dive(`${startDir}/${itemName}`);
         }
         if (startDirs && startDirs[startDirs.length - 1] === itemName) {
-          vscode.window.showInformationMessage("Textblocks have been added to targetted files", { modal: false });
+          window.showInformationMessage("Textblocks have been added to targetted files", { modal: false });
         }
       });
     };
@@ -88,7 +92,7 @@ ${contentsAsString}`;
     } else {
       dive("");
     }
-    vscode.window.showInformationMessage("Textblocks have been added to targetted files", { modal: false });
+    window.showInformationMessage("Textblocks have been added to targetted files", { modal: false });
   });
   ctx.subscriptions.push(addHeadersCMD);
 };
