@@ -9,11 +9,16 @@ interface IProperties {
 
 // Run this when the extension is activated
 const activate = async (ctx: vscode.ExtensionContext) => {
-	const { workspace, Uri, commands, FileSystemError, window } = vscode;
+	const { workspace, Uri, commands, window } = vscode;
 
 	// Run this when the user runs this command
 	const addHeadersCMD = commands.registerCommand("vscode-header-plugin.add-headers-to-files", async (cmdArg: any[]) => {
 		const { fs, rootPath } = workspace;
+
+		if (!rootPath) {
+			window.showInformationMessage('Failed to insert textblocks: No open workspace', { modal: false });
+			return;
+		}
 
 		const root = (cmdArg && cmdArg[0]) || rootPath;
 		const configFilePath = (cmdArg && cmdArg[1]) || `${root}/headerConfig.json`;
@@ -86,7 +91,7 @@ const activate = async (ctx: vscode.ExtensionContext) => {
 
 				// If the last item in startDirs has the filename "itemName", then show this message
 				if (startDirs && startDirs[startDirs.length - 1] === itemName) {
-					vscode.window.showInformationMessage('Textblocks have been added to targetted files', { modal: false });
+					window.showInformationMessage('Textblocks have been added to targetted files', { modal: false });
 				}
 			});
 		};
@@ -97,7 +102,7 @@ const activate = async (ctx: vscode.ExtensionContext) => {
 			dive("");
 
 		}
-		vscode.window.showInformationMessage('Textblocks have been added to targetted files', { modal: false });
+		window.showInformationMessage('Textblocks have been added to targetted files', { modal: false });
 	});
 
 	ctx.subscriptions.push(addHeadersCMD);
