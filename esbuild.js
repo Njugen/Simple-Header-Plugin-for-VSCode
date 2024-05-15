@@ -20,6 +20,7 @@ const extensionConfig = {
 (async () => {
     try {
         await build(extensionConfig);
+        console.log("build complete");
     } catch (err) {
         process.stderr.write(err.stderr);
         process.exit(1);
@@ -35,6 +36,7 @@ const extensionConfig = {
                 ...watchConfig,
             });
             await build(extensionConfig);
+            console.log("[watch] build finished");
         }
     } catch (err) {
         process.stderr.write(err.stderr);

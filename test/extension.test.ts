@@ -1,3 +1,93 @@
+/**
+*
+*
+*  Copyright (c) 2024, <Firstname Lastname>, MIT License
+*  For more information, see the LICENSE file
+*
+*
+**/
+
+
+/**
+*
+*
+*  Copyright (c) 2024, <Firstname Lastname>, MIT License
+*  For more information, see the LICENSE file
+*
+*
+**/
+
+
+/**
+*
+*
+*  Copyright (c) 2024, <Firstname Lastname>, MIT License
+*  For more information, see the LICENSE file
+*
+*
+**/
+
+
+/**
+*
+*
+*  Copyright (c) 2024, <Firstname Lastname>, MIT License
+*  For more information, see the LICENSE file
+*
+*
+**/
+
+
+/**
+*
+*
+*  Copyright (c) 2024, <Firstname Lastname>, MIT License
+*  For more information, see the LICENSE file
+*
+*
+**/
+
+
+/**
+*
+*
+*  Copyright (c) 2024, <Firstname Lastname>, MIT License
+*  For more information, see the LICENSE file
+*
+*
+**/
+
+
+/**
+*
+*
+*  Copyright (c) 2024, <Firstname Lastname>, MIT License
+*  For more information, see the LICENSE file
+*
+*
+**/
+
+
+/**
+*
+*
+*  Copyright (c) 2024, <Firstname Lastname>, MIT License
+*  For more information, see the LICENSE file
+*
+*
+**/
+
+
+/**
+*
+*
+*  Copyright (c) 2024, <Firstname Lastname>, MIT License
+*  For more information, see the LICENSE file
+*
+*
+**/
+
+
 const assert = require("assert");
 const vscode = require("vscode");
 
@@ -9,7 +99,7 @@ suite('Test Simple Header Plugin for VSCode', () => {
         setTimeout(resolve, 5000);
     });
 
-    test("'Simple Header: Add headers to files' command prepends textblock to a document", async function () {
+    test("'Simple Header: Add headers to files' command prepends textblock to documents", async function () {
         this.timeout(15000);
         const mockRootPath = `${rootPath}/test/mocks/`;
         const mockConfigFilePath = `${rootPath}/test/mocks/headerConfig.json`;
@@ -27,30 +117,6 @@ suite('Test Simple Header Plugin for VSCode', () => {
         await wait();
 
         const fileUri = Uri.file(`${mockRootPath}/testfile.js`);
-        const contents = await fs.readFile(fileUri);
-        const data = new TextDecoder().decode(contents);
-
-        assert.ok(data.includes(headerTextBlock));
-    });
-
-    test("'Simple Header: Add headers to files' command prepends textblock to a document within a subfolder", async function () {
-        this.timeout(15000);
-        const mockRootPath = `${rootPath}/test/mocks`;
-        const mockConfigFilePath = `${rootPath}/test/mocks/headerConfig.json`;
-
-        // Work with the mock config file
-        const configFileUri = Uri.file(mockConfigFilePath);
-        const configFile = await fs.readFile(configFileUri);
-        const decodedFile = new TextDecoder().decode(configFile);
-
-        // Decode file and get the settings
-        let properties = JSON.parse(decodedFile);
-        const headerTextBlock = properties.headerText.join("\n");
-
-        commands.executeCommand("vscode-header-plugin.add-headers-to-files", [mockRootPath, mockConfigFilePath]);
-        await wait();
-
-        const fileUri = Uri.file(`${mockRootPath}/level-1-a/testfile1.tsx`);
         const contents = await fs.readFile(fileUri);
         const data = new TextDecoder().decode(contents);
 

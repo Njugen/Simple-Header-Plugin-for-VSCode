@@ -1,9 +1,9 @@
 {
   "name": "vscode-header-plugin",
-  "publisher": "nj",
-  "displayName": "vscode-header-plugin",
+  "publisher": "Thai Nguyen",
+  "displayName": "Simple Header Plugin for VSCode",
   "description": "",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -24,7 +24,7 @@
     "vscode:prepublish": "npm run package",
     "compile": "node ./esbuild.js",
     "watch": "node ./esbuild.js --watch",
-    "package": "NODE_ENV=production node ./esbuild.js",
+    "package": "SET NODE_ENV=production & node ./esbuild.js",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
@@ -34,7 +34,7 @@
   "devDependencies": {
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
-    "@types/vscode": "^1.89.0",
+    "@types/vscode": "^1.75.0",
     "@types/vscode-webview": "^1.57.5",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
@@ -43,11 +43,10 @@
     "esbuild": "^0.16.17",
     "eslint": "^8.57.0",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.4.5",
-    "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@vscode/vsce": "^2.26.1",
     "@vscode/webview-ui-toolkit": "^1.4.0"
   }
 }

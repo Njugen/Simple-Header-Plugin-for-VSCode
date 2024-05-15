@@ -37,7 +37,7 @@ const activate = async (ctx: vscode.ExtensionContext) => {
 			const items = await workspace.fs.readDirectory(srcURI);
 
 			// Loop through the folder's items
-			items.forEach(async (item) => {
+			items.forEach(async (item, i) => {
 				// item: [string, enum], e.g. ["extension.ts", 1], which means extension.ts is a file
 				// See: https://code.visualstudio.com/api/references/vscode-api#FileType
 
@@ -81,18 +81,23 @@ const activate = async (ctx: vscode.ExtensionContext) => {
 					// This is a directory
 					// Continue the recursion
 
-					await dive(`${root}/${itemName}`);
+					await dive(`${startDir}/${itemName}`);
+				}
+
+				// If the last item in startDirs has the filename "itemName", then show this message
+				if (startDirs && startDirs[startDirs.length - 1] === itemName) {
+					vscode.window.showInformationMessage('Textblocks have been added to targetted files', { modal: false });
 				}
 			});
-
 		};
 
 		if (startDirs && startDirs.length > 0) {
 			startDirs.forEach((dir) => dive(dir));
 		} else {
-			dive();
-		}
+			dive("");
 
+		}
+		vscode.window.showInformationMessage('Textblocks have been added to targetted files', { modal: false });
 	});
 
 	ctx.subscriptions.push(addHeadersCMD);
