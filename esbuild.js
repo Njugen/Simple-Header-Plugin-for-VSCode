@@ -13,7 +13,7 @@ const extensionConfig = {
     mainFields: ["module", "main"],
     format: "cjs",
     entryPoints: ["./src/extension.ts"],
-    outfile: "./out/extension.js",
+    outfile: "out/extension.js",
     external: ["vscode"],
 };
 
