@@ -1,7 +1,8 @@
 {
     "startDirs": [
         "/src",
-        "/out"
+        "/out",
+        "/test"
     ],
     "headerText": [
         "/**",
