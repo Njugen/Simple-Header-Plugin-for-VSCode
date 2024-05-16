@@ -1,13 +1,3 @@
-/**
-*
-*
-*  Copyright (c) 2024, <Firstname Lastname>, MIT License
-*  For more information, see the LICENSE file
-*
-*
-**/
-
-
 "use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
