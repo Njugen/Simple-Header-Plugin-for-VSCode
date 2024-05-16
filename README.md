@@ -1,4 +1,4 @@
-# Simple Header Plugin for VSCode - v1.0.0
+# Simple Header Plugin for VSCode - v1.0.1
 
 The plugin recursively __loops through folders within an open workspace__ and applies textblocks to targetted files, taking exceptions into account if any.
 
@@ -31,7 +31,7 @@ While there are a lot of plugins out there for this purpose, surprisingly most o
 
 ```
 {
-    "startDir": ["D:/vscode-header-plugin/src"],
+    "startDir": ["/src"],
     "headerText": [],
     "fileTypes": [],
     "ignoreItems": []
@@ -78,7 +78,11 @@ Should result in the following being prepended to your files:
 Allow files of certain extensions to have the textblock prepended, e.g. __["tsx", "ts", "js", "jsx", "css", "sass","scss"]__. Other files are ignored. 
 
 ### ignoreItems (string[])
-A list of paths to specific items to ignore. E.g. __D:/vscode-header-plugin/src/utils/son-goku.js__. Ignoring a folder also means ignoring all files nested in that folder.
+A list of paths to specific items (either files or folders) to ignore. Ignoring a folder also means ignoring all files nested in that folder. E.g.
+-   __/src/utils/son-goku.js__
+-   __/out/my-folder__
+
+etc. Paths are relative to the workspace's folder.
 
 ## Run
 Hit Ctrl + Shift + P and select **Simple Header: Add headers to files** from the command bar. The plugin inserts a textblock based on settings in  __headerConfig.json__ -

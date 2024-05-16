@@ -11,30 +11,37 @@ interface IProperties {
 const activate = async (ctx: vscode.ExtensionContext) => {
 	const { workspace, Uri, commands, window } = vscode;
 
-	// Run this when the user runs this command
+	// Run this when the user runs "Simple Header: Add headers to files" command
 	const addHeadersCMD = commands.registerCommand("vscode-header-plugin.add-headers-to-files", async (cmdArg: any[]) => {
+		// cmdArg represents passed arguments when triggering this event by code.
+		// - cmdArg[0]: path to root folder
+		// - cmdArg[1]: path to config file
+
 		const { fs, rootPath } = workspace;
 
+		// If no workspace is opened, then tell the user about failing insertion and end this script.
 		if (!rootPath) {
 			window.showInformationMessage('Failed to insert textblocks: No open workspace', { modal: false });
 			return;
 		}
 
+		// Set a root. The root is either
 		const root = (cmdArg && cmdArg[0]) || rootPath;
 		const configFilePath = (cmdArg && cmdArg[1]) || `${root}/headerConfig.json`;
 
-		// Work with the plugin's config file
+		// Read the config file
 		const configFileUri: vscode.Uri = Uri.file(configFilePath);
 		const configFile = await fs.readFile(configFileUri);
+
+		// Decode the config file and get the settings
 		const decodedFile: string = new TextDecoder().decode(configFile);
 
-		// Decode file and get the settings
 		let properties: IProperties = JSON.parse(decodedFile);
-		const headerTextBlock: string = properties.headerText.join("\n");
-		const { fileTypes, startDirs, ignoreItems } = properties;
+		const { fileTypes, startDirs, ignoreItems, headerText } = properties;
+		const headerTextBlock: string = headerText.join("\n");
 		const ignoreItemsFullPaths = ignoreItems.map((item) => `${root}/${item}`);
 
-		// Start looping through the folders in recursion, starting from startPath
+		// Start looping through the folders in recursion, starting from startDir
 		const dive = async (startDir?: string): Promise<void> => {
 			// Read the directory and return all items (sub directories and files) in it
 			const fullStartDirPath = startDir ? (root + "/" + startDir) : root;
@@ -64,8 +71,7 @@ const activate = async (ctx: vscode.ExtensionContext) => {
 				if (typeEnum === 1) {
 					// This is a file
 
-					// Proceed with this file if its extension matches this regex
-					// const extRegex = /^.*\.(ts|js|tsx|jsx|css|scss|txt)$/;
+					// Proceed with this file if its extension matches the filetypes set in the config file.
 					const fileTypesString = fileTypes.join("|");
 					const extRegex = new RegExp(`^.*\.(${fileTypesString})$`);
 
@@ -84,8 +90,8 @@ const activate = async (ctx: vscode.ExtensionContext) => {
 
 				} else if (typeEnum === 2) {
 					// This is a directory
-					// Continue the recursion
 
+					// Continue the recursion
 					await dive(`${startDir}/${itemName}`);
 				}
 
@@ -97,6 +103,7 @@ const activate = async (ctx: vscode.ExtensionContext) => {
 		};
 
 		if (startDirs && startDirs.length > 0) {
+			// Loop through all top directories (startDirs) set in the config files.
 			startDirs.forEach((dir) => dive(dir));
 		} else {
 			dive("");
