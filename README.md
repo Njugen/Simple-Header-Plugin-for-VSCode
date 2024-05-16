@@ -1,4 +1,4 @@
-# Simple Header Plugin for VSCode - v1.0.0
+# Simple Header Plugin for VSCode - v1.0.1
 
 The plugin recursively __loops through folders within an open workspace__ and applies textblocks to targetted files, taking exceptions into account if any.
 
