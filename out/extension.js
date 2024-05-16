@@ -1,3 +1,13 @@
+/**
+*
+*
+*  Copyright (c) 2024, <Firstname Lastname>, MIT License
+*  For more information, see the LICENSE file
+*
+*
+**/
+
+
 "use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
@@ -48,8 +58,8 @@ var activate = async (ctx) => {
     const configFile = await fs.readFile(configFileUri);
     const decodedFile = new TextDecoder().decode(configFile);
     let properties = JSON.parse(decodedFile);
-    const headerTextBlock = properties.headerText.join("\n");
-    const { fileTypes, startDirs, ignoreItems } = properties;
+    const { fileTypes, startDirs, ignoreItems, headerText } = properties;
+    const headerTextBlock = headerText.join("\n");
     const ignoreItemsFullPaths = ignoreItems.map((item) => `${root}/${item}`);
     const dive = async (startDir) => {
       const fullStartDirPath = startDir ? root + "/" + startDir : root;

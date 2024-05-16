@@ -31,7 +31,7 @@ While there are a lot of plugins out there for this purpose, surprisingly most o
 
 ```
 {
-    "startDir": "D:/vscode-header-plugin/src",
+    "startDir": ["D:/vscode-header-plugin/src"],
     "headerText": [],
     "fileTypes": [],
     "ignoreItems": []
