@@ -113,6 +113,10 @@ The results shows up in the terminal once the tests have been completed.
 
 - Write tests to thoroughly cover important cases that occurs when changing headerConfig.json
 - Configure bundling
+- Remove redundant packages (many of them are irrelevant to this project...)
+- Add UI and more flexible ways of adding comment block.
+    - Get rid of arrays. Change to regex.
+- Expand ignore list: support paths and regex
 
 # MIT License
 This plugin falls under the MIT License (see LICENSE.md). Use it however you like, change it however you like and distribute it however you like. Contributions are appreciated, just keep it simple.
